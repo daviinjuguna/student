@@ -146,6 +146,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                           ),
                         ),
                         Flexible(
+                          flex: 1,
                           child: PageView.builder(
                             onPageChanged: (int index) {
                               setState(() {
