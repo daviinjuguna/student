@@ -11,43 +11,47 @@ import 'package:injectable/injectable.dart' as _i2;
 import 'package:shared_preferences/shared_preferences.dart' as _i7;
 
 import '../core/util/handle_call.dart' as _i6;
-import '../data/datasourse/api/student_api.dart' as _i8;
-import '../data/datasourse/local/local_data_source.dart' as _i9;
-import '../data/datasourse/network/connectivity_checker.dart' as _i5;
-import '../data/datasourse/remote/remote_data_sorce.dart' as _i10;
-import '../data/repository/eshule_repository_impl.dart' as _i12;
-import '../domain/repository/eshule_repository.dart' as _i11;
-import '../domain/usecase/common/check_auth.dart' as _i19;
-import '../domain/usecase/common/check_battery.dart' as _i20;
-import '../domain/usecase/common/check_connection.dart' as _i21;
-import '../domain/usecase/common/clear_prefs.dart' as _i22;
-import '../domain/usecase/common/get_assignment.dart' as _i24;
-import '../domain/usecase/common/get_choice.dart' as _i26;
-import '../domain/usecase/common/get_course.dart' as _i28;
-import '../domain/usecase/common/get_pdf.dart' as _i29;
-import '../domain/usecase/common/get_question.dart' as _i31;
-import '../domain/usecase/common/get_user.dart' as _i33;
-import '../domain/usecase/common/login.dart' as _i34;
-import '../domain/usecase/common/logout.dart' as _i35;
-import '../domain/usecase/common/refresh_token.dart' as _i37;
-import '../domain/usecase/common/register.dart' as _i38;
-import '../domain/usecase/student/answer_question.dart' as _i16;
-import '../domain/usecase/student/apply_course.dart' as _i17;
-import '../domain/usecase/student/start_assignment.dart' as _i13;
-import '../domain/usecase/student/submit_assignment.dart' as _i14;
-import '../domain/usecase/student/unnaply_course.dart' as _i15;
-import '../presentation/bloc/apply_course/application_bloc.dart' as _i40;
-import '../presentation/bloc/attempt/attempt_bloc.dart' as _i18;
-import '../presentation/bloc/auth/auth_bloc.dart' as _i41;
-import '../presentation/bloc/battery/battery_bloc.dart' as _i42;
-import '../presentation/bloc/clear_prefs/clear_prefs_bloc.dart' as _i23;
-import '../presentation/bloc/dashboard/dashboard_bloc.dart' as _i43;
-import '../presentation/bloc/get_assignment/get_assignment_bloc.dart' as _i25;
-import '../presentation/bloc/get_choice/get_choice_bloc.dart' as _i27;
-import '../presentation/bloc/get_pdf/get_pdf_bloc.dart' as _i30;
-import '../presentation/bloc/get_question/get_question_bloc.dart' as _i32;
-import '../presentation/bloc/network/ntwork_bloc.dart' as _i36;
-import '../presentation/bloc/splash_bloc/splash_bloc.dart' as _i39;
+import '../features/data/datasourse/api/student_api.dart' as _i8;
+import '../features/data/datasourse/local/local_data_source.dart' as _i9;
+import '../features/data/datasourse/network/connectivity_checker.dart' as _i5;
+import '../features/data/datasourse/remote/remote_data_sorce.dart' as _i10;
+import '../features/data/repository/eshule_repository_impl.dart' as _i12;
+import '../features/domain/repository/eshule_repository.dart' as _i11;
+import '../features/domain/usecase/common/check_auth.dart' as _i19;
+import '../features/domain/usecase/common/check_battery.dart' as _i20;
+import '../features/domain/usecase/common/check_connection.dart' as _i21;
+import '../features/domain/usecase/common/clear_prefs.dart' as _i22;
+import '../features/domain/usecase/common/get_assignment.dart' as _i24;
+import '../features/domain/usecase/common/get_choice.dart' as _i26;
+import '../features/domain/usecase/common/get_course.dart' as _i28;
+import '../features/domain/usecase/common/get_pdf.dart' as _i29;
+import '../features/domain/usecase/common/get_question.dart' as _i31;
+import '../features/domain/usecase/common/get_user.dart' as _i33;
+import '../features/domain/usecase/common/login.dart' as _i34;
+import '../features/domain/usecase/common/logout.dart' as _i35;
+import '../features/domain/usecase/common/refresh_token.dart' as _i37;
+import '../features/domain/usecase/common/register.dart' as _i38;
+import '../features/domain/usecase/student/answer_question.dart' as _i16;
+import '../features/domain/usecase/student/apply_course.dart' as _i17;
+import '../features/domain/usecase/student/start_assignment.dart' as _i13;
+import '../features/domain/usecase/student/submit_assignment.dart' as _i14;
+import '../features/domain/usecase/student/unnaply_course.dart' as _i15;
+import '../features/presentation/bloc/apply_course/application_bloc.dart'
+    as _i40;
+import '../features/presentation/bloc/attempt/attempt_bloc.dart' as _i18;
+import '../features/presentation/bloc/auth/auth_bloc.dart' as _i41;
+import '../features/presentation/bloc/battery/battery_bloc.dart' as _i42;
+import '../features/presentation/bloc/clear_prefs/clear_prefs_bloc.dart'
+    as _i23;
+import '../features/presentation/bloc/dashboard/dashboard_bloc.dart' as _i43;
+import '../features/presentation/bloc/get_assignment/get_assignment_bloc.dart'
+    as _i25;
+import '../features/presentation/bloc/get_choice/get_choice_bloc.dart' as _i27;
+import '../features/presentation/bloc/get_pdf/get_pdf_bloc.dart' as _i30;
+import '../features/presentation/bloc/get_question/get_question_bloc.dart'
+    as _i32;
+import '../features/presentation/bloc/network/ntwork_bloc.dart' as _i36;
+import '../features/presentation/bloc/splash_bloc/splash_bloc.dart' as _i39;
 import 'module_injection.dart' as _i44; // ignore_for_file: unnecessary_lambdas
 
 // ignore_for_file: lines_longer_than_80_chars

@@ -7,20 +7,24 @@
 import 'package:auto_route/auto_route.dart' as _i1;
 import 'package:flutter/cupertino.dart' as _i11;
 import 'package:flutter/material.dart' as _i2;
-import 'package:student/domain/entities/assignment.dart' as _i13;
-import 'package:student/domain/entities/course.dart' as _i12;
-import 'package:student/domain/entities/pdf.dart' as _i15;
-import 'package:student/domain/entities/question.dart' as _i14;
-import 'package:student/presentation/components/pdf_view.dart' as _i10;
-import 'package:student/presentation/pages/assignment/assignmate_page.dart'
+import 'package:student/features/domain/entities/assignment.dart' as _i13;
+import 'package:student/features/domain/entities/course.dart' as _i12;
+import 'package:student/features/domain/entities/pdf.dart' as _i15;
+import 'package:student/features/domain/entities/question.dart' as _i14;
+import 'package:student/features/presentation/components/pdf_view.dart' as _i10;
+import 'package:student/features/presentation/pages/assignment/assignmate_page.dart'
     as _i8;
-import 'package:student/presentation/pages/assignment/question_page.dart'
+import 'package:student/features/presentation/pages/assignment/question_page.dart'
     as _i9;
-import 'package:student/presentation/pages/auth/login_page.dart' as _i4;
-import 'package:student/presentation/pages/auth/register_page.dart' as _i5;
-import 'package:student/presentation/pages/core/splash.dart' as _i3;
-import 'package:student/presentation/pages/course/student_course.dart' as _i7;
-import 'package:student/presentation/pages/home/student_home.dart' as _i6;
+import 'package:student/features/presentation/pages/auth/login_page.dart'
+    as _i4;
+import 'package:student/features/presentation/pages/auth/register_page.dart'
+    as _i5;
+import 'package:student/features/presentation/pages/core/splash.dart' as _i3;
+import 'package:student/features/presentation/pages/course/student_course.dart'
+    as _i7;
+import 'package:student/features/presentation/pages/home/student_home.dart'
+    as _i6;
 
 class AppRouter extends _i1.RootStackRouter {
   AppRouter([_i2.GlobalKey<_i2.NavigatorState>? navigatorKey])
