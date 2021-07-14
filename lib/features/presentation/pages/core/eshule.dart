@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:student/core/util/constant.dart';
 import 'package:student/di/injection.dart';
 import 'package:student/features/presentation/bloc/battery/battery_bloc.dart';
@@ -131,6 +132,7 @@ Widget buildMaterialApp(BuildContext context) => MaterialApp.router(
         primarySwatch: kPrimarySwatch,
         brightness: Brightness.light,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        textTheme: GoogleFonts.montserratTextTheme(),
         // textTheme: GoogleFonts.openSansTextTheme(Theme.of(context).textTheme),
         appBarTheme: AppBarTheme(
           color: kBlackColor,
@@ -145,6 +147,7 @@ Widget buildMaterialApp(BuildContext context) => MaterialApp.router(
           primarySwatch: kPrimarySwatch,
           brightness: Brightness.dark,
           visualDensity: VisualDensity.adaptivePlatformDensity,
+          textTheme: GoogleFonts.montserratTextTheme(),
           appBarTheme: AppBarTheme(
             color: Colors.black,
             titleTextStyle: TextStyle(color: Colors.white),

@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:injectable/injectable.dart';
 import 'package:http_interceptor/http_interceptor.dart';
 import 'package:student/core/util/constant.dart';
+import 'package:student/core/util/headers_interceptors.dart';
 import 'package:student/core/util/logging_interceptor.dart';
 
 abstract class StudentService {
@@ -87,6 +90,7 @@ class StudentServiceImpl implements StudentService {
   http.Client client = InterceptedClient.build(
     interceptors: [
       LoggingInterceptor(),
+      HeadersInterceptors(),
     ],
     requestTimeout: Duration(seconds: 60),
   );
@@ -98,11 +102,10 @@ class StudentServiceImpl implements StudentService {
     final String url = "/api/login";
     return client.post(
       Uri.https(BASE_URL, url),
-      headers: {"Accept": "application/json"},
-      body: {
+      body: jsonEncode({
         "email": email,
         "password": password,
-      },
+      }),
     );
   }
 
@@ -116,13 +119,12 @@ class StudentServiceImpl implements StudentService {
     final String url = "/api/register";
     return client.post(
       Uri.https(BASE_URL, url),
-      headers: {"Accept": "application/json"},
-      body: {
+      body: jsonEncode({
         "name": name,
         "email": email,
         "password": password,
         "password_confirmation": confirmPassword
-      },
+      }),
     );
   }
 
@@ -131,10 +133,7 @@ class StudentServiceImpl implements StudentService {
     final String url = "/api/user";
     return client.get(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
+      headers: {'Authorization': accessToken},
     );
   }
 
@@ -143,10 +142,7 @@ class StudentServiceImpl implements StudentService {
     final String url = "/api/logout";
     return client.post(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
+      headers: {'Authorization': accessToken},
     );
   }
 
@@ -156,7 +152,7 @@ class StudentServiceImpl implements StudentService {
     return client.post(
       Uri.https(BASE_URL, url),
       headers: {"Accept": "application/json"},
-      body: {"refresh_token": refreshToken},
+      body: jsonEncode({"refresh_token": refreshToken}),
     );
   }
 
@@ -165,10 +161,7 @@ class StudentServiceImpl implements StudentService {
     final String url = "/api/get_course";
     return client.get(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
+      headers: {'Authorization': accessToken},
     );
   }
 
@@ -176,12 +169,11 @@ class StudentServiceImpl implements StudentService {
   Future<http.Response> applyCourse(
       {required int courseId, required String accessToken}) {
     final String url = "/api/apply";
-    return client.post(Uri.https(BASE_URL, url), headers: {
-      "Accept": "application/json",
-      'Authorization': accessToken,
-    }, body: {
-      'course_id': "$courseId",
-    });
+    return client.post(
+      Uri.https(BASE_URL, url),
+      headers: {'Authorization': accessToken},
+      body: jsonEncode({'course_id': "$courseId"}),
+    );
   }
 
   @override
@@ -192,13 +184,8 @@ class StudentServiceImpl implements StudentService {
     final String url = "/api/unapply";
     return client.post(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
-      body: {
-        'course_id': "$courseId",
-      },
+      headers: {'Authorization': accessToken},
+      body: jsonEncode({'course_id': "$courseId"}),
     );
   }
 
@@ -211,10 +198,7 @@ class StudentServiceImpl implements StudentService {
     final String url = "api/get_pdf/$courseId";
     return client.get(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
+      headers: {'Authorization': accessToken},
     );
   }
 
@@ -224,10 +208,7 @@ class StudentServiceImpl implements StudentService {
     final String url = "api/get_assignment/$courseId";
     return client.get(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
+      headers: {'Authorization': accessToken},
     );
   }
 
@@ -237,10 +218,7 @@ class StudentServiceImpl implements StudentService {
     final String url = "api/get_question/$assignmentId";
     return client.get(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
+      headers: {'Authorization': accessToken},
     );
   }
 
@@ -250,10 +228,7 @@ class StudentServiceImpl implements StudentService {
     final String url = "api/get_choice/$questionId";
     return client.get(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
+      headers: {'Authorization': accessToken},
     );
   }
 
@@ -265,11 +240,8 @@ class StudentServiceImpl implements StudentService {
     final String url = "api/attempt_assignment";
     return client.post(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
-      body: {"assignment_id": "$assignmentId"},
+      headers: {'Authorization': accessToken},
+      body: jsonEncode({"assignment_id": "$assignmentId"}),
     );
   }
 
@@ -282,14 +254,11 @@ class StudentServiceImpl implements StudentService {
     final String url = "api/attempt_question";
     return client.post(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
-      body: {
+      headers: {'Authorization': accessToken},
+      body: jsonEncode({
         "question_id": "$questionId",
         "answer_id": "$answerId",
-      },
+      }),
     );
   }
 
@@ -299,11 +268,8 @@ class StudentServiceImpl implements StudentService {
     final String url = "api/grade";
     return client.post(
       Uri.https(BASE_URL, url),
-      headers: {
-        "Accept": "application/json",
-        'Authorization': accessToken,
-      },
-      body: {"attempted_assignments_id": "$attemptedId"},
+      headers: {'Authorization': accessToken},
+      body: jsonEncode({"attempted_assignments_id": "$attemptedId"}),
     );
   }
 }

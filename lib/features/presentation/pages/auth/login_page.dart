@@ -94,6 +94,7 @@ class _LoginPageState extends State<LoginPage> {
           );
         },
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Container(
             height: MediaQuery.of(context).size.height,
             alignment: Alignment.center,

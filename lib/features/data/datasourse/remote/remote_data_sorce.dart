@@ -206,7 +206,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         List<CourseModel> courses = [];
         Map<String, dynamic> body = jsonDecode(response.body);
         try {
-          courses = (body['course'] as List)
+          courses = (body['course']['data'] as List)
               .map((body) => CourseModel.fromJson(body))
               .toList();
         } catch (e) {

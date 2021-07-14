@@ -95,6 +95,7 @@ class _RegisterPageState extends State<RegisterPage> {
           );
         },
         child: Scaffold(
+          backgroundColor: Colors.white,
           body: Container(
             height: MediaQuery.of(context).size.height,
             alignment: Alignment.center,
