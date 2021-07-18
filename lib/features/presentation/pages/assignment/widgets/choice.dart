@@ -4,11 +4,17 @@ import 'package:student/core/util/constant.dart';
 class ChoiceCard extends StatelessWidget {
   final VoidCallback press;
   final String name;
+  final bool correct;
+  final bool selected;
+  final bool currentSelected;
 
   const ChoiceCard({
     Key? key,
     required this.press,
     required this.name,
+    required this.correct,
+    required this.selected,
+    required this.currentSelected,
   }) : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -29,19 +35,25 @@ class ChoiceCard extends StatelessWidget {
                 style: TextStyle(color: kBlackColor, fontSize: 16),
               ),
             ),
-            Container(
+            AnimatedContainer(
+              duration: Duration(milliseconds: 100),
               height: 26,
               width: 26,
               decoration: BoxDecoration(
+                color: selected || currentSelected ? kYellowColor : null,
                 // color: getTheRightColor() == kGrayColor
                 //     ? Colors.transparent
                 //     : getTheRightColor(),
                 borderRadius: BorderRadius.circular(50),
-                border: Border.all(color: kBlackColor),
+                border: Border.all(
+                  color: correct
+                      ? Colors.green
+                      : correct != selected
+                          ? Colors.red
+                          : kBlackColor,
+                  width: correct || correct != selected ? 4 : 1,
+                ),
               ),
-              // child: getTheRightColor() == kGrayColor
-              //     ? null
-              //     : Icon(getTheRightIcon(), size: 16),
             )
           ],
         ),

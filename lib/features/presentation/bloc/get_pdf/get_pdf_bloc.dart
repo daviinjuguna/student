@@ -23,6 +23,14 @@ class GetPdfBloc extends Bloc<GetPdfEvent, GetPdfState> {
     GetPdfEvent event,
   ) async* {
     yield* event.map(
+      update: (e) async* {
+        yield GetPdfState.updating();
+        final _pdf = await _getPdf.call(ParamsId(id: e.id));
+        yield _pdf.fold(
+          (l) => GetPdfState.error(message: l),
+          (pdf) => GetPdfState.success(pdf: pdf),
+        );
+      },
       started: (e) async* {
         yield GetPdfState.loading();
         final _pdf = await _getPdf.call(ParamsId(id: e.id));

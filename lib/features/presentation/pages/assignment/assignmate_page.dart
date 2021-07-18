@@ -54,6 +54,9 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
             listener: (context, state) {
               state.maybeMap(
                 orElse: () {},
+                success: (state) {
+                  _question = state.question;
+                },
                 error: (state) {
                   ScaffoldMessenger.maybeOf(context)!..hideCurrentSnackBar();
                   if (state.message == UNAUTHENTICATED_FAILURE_MESSAGE) {
@@ -114,52 +117,58 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
           body: SafeArea(
             child: BlocBuilder<GetQuestionBloc, GetQuestionState>(
               builder: (context, state) {
-                return state.map(
-                  initial: (_) => Container(),
+                return state.maybeMap(
+                  // initial: (_) => Container(),
                   loading: (_) => Center(
                     child: CupertinoActivityIndicator(),
                   ),
-                  success: (state) {
-                    _question = state.question;
-                    return Column(
-                      children: [
-                        SizedBox(height: 30),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text.rich(
-                            TextSpan(
-                              text: "Question ${_initialPage + 1}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline4!
-                                  .copyWith(color: kYellowColor),
-                              children: [
-                                TextSpan(
-                                  text: "/${_question.size}",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .headline5!
-                                      .copyWith(color: kYellowColor),
-                                ),
-                              ],
+                  orElse: () {
+                    // _question =
+                    return Container(
+                      height: MediaQuery.of(context).size.height,
+                      child: Column(
+                        children: [
+                          SizedBox(height: 30),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text.rich(
+                              TextSpan(
+                                text: "Question ${_initialPage + 1}",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .headline4!
+                                    .copyWith(color: kBlackColor),
+                                children: [
+                                  TextSpan(
+                                    text: "/${_question.size}",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline5!
+                                        .copyWith(color: kBlackColor),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Flexible(
-                          flex: 1,
-                          child: PageView.builder(
-                            onPageChanged: (int index) {
-                              setState(() {
-                                _initialPage = index;
-                              });
-                            },
-                            itemCount: _question.size,
-                            itemBuilder: (context, index) => QuestionCard(
-                              question: _question[index],
+                          SizedBox(height: 5),
+                          Flexible(
+                            flex: 4,
+                            child: PageView.builder(
+                              onPageChanged: (int index) {
+                                setState(() {
+                                  _initialPage = index;
+                                });
+                              },
+                              itemCount: _question.size,
+                              itemBuilder: (context, index) => QuestionCard(
+                                assignmentId: widget._assignment.id,
+                                question: _question[index],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+                          Expanded(child: Container()),
+                        ],
+                      ),
                     );
                   },
                   error: (_) => ErrorCard(

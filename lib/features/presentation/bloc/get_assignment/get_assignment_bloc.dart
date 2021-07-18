@@ -22,15 +22,20 @@ class GetAssignmentBloc extends Bloc<GetAssignmentEvent, GetAssignmentState> {
   Stream<GetAssignmentState> mapEventToState(
     GetAssignmentEvent event,
   ) async* {
-    yield* event.map(
-      started: (e) async* {
-        yield GetAssignmentState.loading();
-        final _assignment = await _getAssignment.call(ParamsId(id: e.id));
-        yield _assignment.fold(
-          (l) => GetAssignmentState.error(message: l),
-          (r) => GetAssignmentState.success(assignment: r),
-        );
-      },
-    );
+    yield* event.map(started: (e) async* {
+      yield GetAssignmentState.loading();
+      final _assignment = await _getAssignment.call(ParamsId(id: e.id));
+      yield _assignment.fold(
+        (l) => GetAssignmentState.error(message: l),
+        (r) => GetAssignmentState.success(assignment: r),
+      );
+    }, update: (e) async* {
+      yield GetAssignmentState.updating();
+      final _assignment = await _getAssignment.call(ParamsId(id: e.id));
+      yield _assignment.fold(
+        (l) => GetAssignmentState.error(message: l),
+        (r) => GetAssignmentState.success(assignment: r),
+      );
+    });
   }
 }

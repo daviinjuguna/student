@@ -12,5 +12,7 @@ class Question with _$Question {
     required int id,
     required String question,
     required KtList<Choice> choices,
+    int? selectedAnswerId,
+    required int answerId,
   }) = _Question;
 }

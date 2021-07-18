@@ -26,11 +26,17 @@ class _$QuestionModelTearOff {
       @JsonKey(name: "question", required: true)
           required String question,
       @JsonKey(name: 'choices', required: true)
-          required List<ChoiceModel> choices}) {
+          required List<ChoiceModel> choices,
+      @JsonKey(name: "selected", includeIfNull: false)
+          SelectedModel? selectedAnswer,
+      @JsonKey(name: "answer_id")
+          required int answerId}) {
     return _QuestionModel(
       id: id,
       question: question,
       choices: choices,
+      selectedAnswer: selectedAnswer,
+      answerId: answerId,
     );
   }
 
@@ -50,6 +56,10 @@ mixin _$QuestionModel {
   String get question => throw _privateConstructorUsedError;
   @JsonKey(name: 'choices', required: true)
   List<ChoiceModel> get choices => throw _privateConstructorUsedError;
+  @JsonKey(name: "selected", includeIfNull: false)
+  SelectedModel? get selectedAnswer => throw _privateConstructorUsedError;
+  @JsonKey(name: "answer_id")
+  int get answerId => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -63,9 +73,18 @@ abstract class $QuestionModelCopyWith<$Res> {
           QuestionModel value, $Res Function(QuestionModel) then) =
       _$QuestionModelCopyWithImpl<$Res>;
   $Res call(
-      {@JsonKey(name: "id", required: true) int id,
-      @JsonKey(name: "question", required: true) String question,
-      @JsonKey(name: 'choices', required: true) List<ChoiceModel> choices});
+      {@JsonKey(name: "id", required: true)
+          int id,
+      @JsonKey(name: "question", required: true)
+          String question,
+      @JsonKey(name: 'choices', required: true)
+          List<ChoiceModel> choices,
+      @JsonKey(name: "selected", includeIfNull: false)
+          SelectedModel? selectedAnswer,
+      @JsonKey(name: "answer_id")
+          int answerId});
+
+  $SelectedModelCopyWith<$Res>? get selectedAnswer;
 }
 
 /// @nodoc
@@ -82,6 +101,8 @@ class _$QuestionModelCopyWithImpl<$Res>
     Object? id = freezed,
     Object? question = freezed,
     Object? choices = freezed,
+    Object? selectedAnswer = freezed,
+    Object? answerId = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -96,7 +117,26 @@ class _$QuestionModelCopyWithImpl<$Res>
           ? _value.choices
           : choices // ignore: cast_nullable_to_non_nullable
               as List<ChoiceModel>,
+      selectedAnswer: selectedAnswer == freezed
+          ? _value.selectedAnswer
+          : selectedAnswer // ignore: cast_nullable_to_non_nullable
+              as SelectedModel?,
+      answerId: answerId == freezed
+          ? _value.answerId
+          : answerId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
+  }
+
+  @override
+  $SelectedModelCopyWith<$Res>? get selectedAnswer {
+    if (_value.selectedAnswer == null) {
+      return null;
+    }
+
+    return $SelectedModelCopyWith<$Res>(_value.selectedAnswer!, (value) {
+      return _then(_value.copyWith(selectedAnswer: value));
+    });
   }
 }
 
@@ -108,9 +148,19 @@ abstract class _$QuestionModelCopyWith<$Res>
       __$QuestionModelCopyWithImpl<$Res>;
   @override
   $Res call(
-      {@JsonKey(name: "id", required: true) int id,
-      @JsonKey(name: "question", required: true) String question,
-      @JsonKey(name: 'choices', required: true) List<ChoiceModel> choices});
+      {@JsonKey(name: "id", required: true)
+          int id,
+      @JsonKey(name: "question", required: true)
+          String question,
+      @JsonKey(name: 'choices', required: true)
+          List<ChoiceModel> choices,
+      @JsonKey(name: "selected", includeIfNull: false)
+          SelectedModel? selectedAnswer,
+      @JsonKey(name: "answer_id")
+          int answerId});
+
+  @override
+  $SelectedModelCopyWith<$Res>? get selectedAnswer;
 }
 
 /// @nodoc
@@ -129,6 +179,8 @@ class __$QuestionModelCopyWithImpl<$Res>
     Object? id = freezed,
     Object? question = freezed,
     Object? choices = freezed,
+    Object? selectedAnswer = freezed,
+    Object? answerId = freezed,
   }) {
     return _then(_QuestionModel(
       id: id == freezed
@@ -143,6 +195,14 @@ class __$QuestionModelCopyWithImpl<$Res>
           ? _value.choices
           : choices // ignore: cast_nullable_to_non_nullable
               as List<ChoiceModel>,
+      selectedAnswer: selectedAnswer == freezed
+          ? _value.selectedAnswer
+          : selectedAnswer // ignore: cast_nullable_to_non_nullable
+              as SelectedModel?,
+      answerId: answerId == freezed
+          ? _value.answerId
+          : answerId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -153,7 +213,9 @@ class _$_QuestionModel extends _QuestionModel {
   _$_QuestionModel(
       {@JsonKey(name: "id", required: true) required this.id,
       @JsonKey(name: "question", required: true) required this.question,
-      @JsonKey(name: 'choices', required: true) required this.choices})
+      @JsonKey(name: 'choices', required: true) required this.choices,
+      @JsonKey(name: "selected", includeIfNull: false) this.selectedAnswer,
+      @JsonKey(name: "answer_id") required this.answerId})
       : super._();
 
   factory _$_QuestionModel.fromJson(Map<String, dynamic> json) =>
@@ -168,10 +230,16 @@ class _$_QuestionModel extends _QuestionModel {
   @override
   @JsonKey(name: 'choices', required: true)
   final List<ChoiceModel> choices;
+  @override
+  @JsonKey(name: "selected", includeIfNull: false)
+  final SelectedModel? selectedAnswer;
+  @override
+  @JsonKey(name: "answer_id")
+  final int answerId;
 
   @override
   String toString() {
-    return 'QuestionModel(id: $id, question: $question, choices: $choices)';
+    return 'QuestionModel(id: $id, question: $question, choices: $choices, selectedAnswer: $selectedAnswer, answerId: $answerId)';
   }
 
   @override
@@ -184,7 +252,14 @@ class _$_QuestionModel extends _QuestionModel {
                 const DeepCollectionEquality()
                     .equals(other.question, question)) &&
             (identical(other.choices, choices) ||
-                const DeepCollectionEquality().equals(other.choices, choices)));
+                const DeepCollectionEquality()
+                    .equals(other.choices, choices)) &&
+            (identical(other.selectedAnswer, selectedAnswer) ||
+                const DeepCollectionEquality()
+                    .equals(other.selectedAnswer, selectedAnswer)) &&
+            (identical(other.answerId, answerId) ||
+                const DeepCollectionEquality()
+                    .equals(other.answerId, answerId)));
   }
 
   @override
@@ -192,7 +267,9 @@ class _$_QuestionModel extends _QuestionModel {
       runtimeType.hashCode ^
       const DeepCollectionEquality().hash(id) ^
       const DeepCollectionEquality().hash(question) ^
-      const DeepCollectionEquality().hash(choices);
+      const DeepCollectionEquality().hash(choices) ^
+      const DeepCollectionEquality().hash(selectedAnswer) ^
+      const DeepCollectionEquality().hash(answerId);
 
   @JsonKey(ignore: true)
   @override
@@ -212,7 +289,11 @@ abstract class _QuestionModel extends QuestionModel {
       @JsonKey(name: "question", required: true)
           required String question,
       @JsonKey(name: 'choices', required: true)
-          required List<ChoiceModel> choices}) = _$_QuestionModel;
+          required List<ChoiceModel> choices,
+      @JsonKey(name: "selected", includeIfNull: false)
+          SelectedModel? selectedAnswer,
+      @JsonKey(name: "answer_id")
+          required int answerId}) = _$_QuestionModel;
   _QuestionModel._() : super._();
 
   factory _QuestionModel.fromJson(Map<String, dynamic> json) =
@@ -227,6 +308,12 @@ abstract class _QuestionModel extends QuestionModel {
   @override
   @JsonKey(name: 'choices', required: true)
   List<ChoiceModel> get choices => throw _privateConstructorUsedError;
+  @override
+  @JsonKey(name: "selected", includeIfNull: false)
+  SelectedModel? get selectedAnswer => throw _privateConstructorUsedError;
+  @override
+  @JsonKey(name: "answer_id")
+  int get answerId => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$QuestionModelCopyWith<_QuestionModel> get copyWith =>

@@ -304,7 +304,10 @@ class _StudentHomePageState extends State<StudentHomePage> {
                           child: Column(
                             children: [
                               Container(
-                                constraints: BoxConstraints(minHeight: 200),
+                                constraints: BoxConstraints(
+                                  minHeight: 200,
+                                  maxHeight: 300,
+                                ),
                                 width: double.infinity,
                                 child: FadeInImage.assetNetwork(
                                   fit: BoxFit.fill,

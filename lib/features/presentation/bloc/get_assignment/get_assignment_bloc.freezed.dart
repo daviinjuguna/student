@@ -21,6 +21,12 @@ class _$GetAssignmentEventTearOff {
       id: id,
     );
   }
+
+  _Update update({required int id}) {
+    return _Update(
+      id: id,
+    );
+  }
 }
 
 /// @nodoc
@@ -33,22 +39,26 @@ mixin _$GetAssignmentEvent {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int id) started,
+    required TResult Function(int id) update,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? started,
+    TResult Function(int id)? update,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
+    required TResult Function(_Update value) update,
   }) =>
       throw _privateConstructorUsedError;
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
+    TResult Function(_Update value)? update,
     required TResult orElse(),
   }) =>
       throw _privateConstructorUsedError;
@@ -154,6 +164,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult when<TResult extends Object?>({
     required TResult Function(int id) started,
+    required TResult Function(int id) update,
   }) {
     return started(id);
   }
@@ -162,6 +173,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult maybeWhen<TResult extends Object?>({
     TResult Function(int id)? started,
+    TResult Function(int id)? update,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -174,6 +186,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult map<TResult extends Object?>({
     required TResult Function(_Started value) started,
+    required TResult Function(_Update value) update,
   }) {
     return started(this);
   }
@@ -182,6 +195,7 @@ class _$_Started implements _Started {
   @optionalTypeArgs
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Started value)? started,
+    TResult Function(_Update value)? update,
     required TResult orElse(),
   }) {
     if (started != null) {
@@ -203,6 +217,122 @@ abstract class _Started implements GetAssignmentEvent {
 }
 
 /// @nodoc
+abstract class _$UpdateCopyWith<$Res>
+    implements $GetAssignmentEventCopyWith<$Res> {
+  factory _$UpdateCopyWith(_Update value, $Res Function(_Update) then) =
+      __$UpdateCopyWithImpl<$Res>;
+  @override
+  $Res call({int id});
+}
+
+/// @nodoc
+class __$UpdateCopyWithImpl<$Res> extends _$GetAssignmentEventCopyWithImpl<$Res>
+    implements _$UpdateCopyWith<$Res> {
+  __$UpdateCopyWithImpl(_Update _value, $Res Function(_Update) _then)
+      : super(_value, (v) => _then(v as _Update));
+
+  @override
+  _Update get _value => super._value as _Update;
+
+  @override
+  $Res call({
+    Object? id = freezed,
+  }) {
+    return _then(_Update(
+      id: id == freezed
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+    ));
+  }
+}
+
+/// @nodoc
+
+class _$_Update implements _Update {
+  const _$_Update({required this.id});
+
+  @override
+  final int id;
+
+  @override
+  String toString() {
+    return 'GetAssignmentEvent.update(id: $id)';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) ||
+        (other is _Update &&
+            (identical(other.id, id) ||
+                const DeepCollectionEquality().equals(other.id, id)));
+  }
+
+  @override
+  int get hashCode =>
+      runtimeType.hashCode ^ const DeepCollectionEquality().hash(id);
+
+  @JsonKey(ignore: true)
+  @override
+  _$UpdateCopyWith<_Update> get copyWith =>
+      __$UpdateCopyWithImpl<_Update>(this, _$identity);
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function(int id) started,
+    required TResult Function(int id) update,
+  }) {
+    return update(id);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function(int id)? started,
+    TResult Function(int id)? update,
+    required TResult orElse(),
+  }) {
+    if (update != null) {
+      return update(id);
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Started value) started,
+    required TResult Function(_Update value) update,
+  }) {
+    return update(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Started value)? started,
+    TResult Function(_Update value)? update,
+    required TResult orElse(),
+  }) {
+    if (update != null) {
+      return update(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Update implements GetAssignmentEvent {
+  const factory _Update({required int id}) = _$_Update;
+
+  @override
+  int get id => throw _privateConstructorUsedError;
+  @override
+  @JsonKey(ignore: true)
+  _$UpdateCopyWith<_Update> get copyWith => throw _privateConstructorUsedError;
+}
+
+/// @nodoc
 class _$GetAssignmentStateTearOff {
   const _$GetAssignmentStateTearOff();
 
@@ -212,6 +342,10 @@ class _$GetAssignmentStateTearOff {
 
   _Load loading() {
     return const _Load();
+  }
+
+  _Updating updating() {
+    return const _Updating();
   }
 
   _Success success({required KtList<Assignment> assignment}) {
@@ -236,6 +370,7 @@ mixin _$GetAssignmentState {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function() updating,
     required TResult Function(KtList<Assignment> assignment) success,
     required TResult Function(String message) error,
   }) =>
@@ -244,6 +379,7 @@ mixin _$GetAssignmentState {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function()? updating,
     TResult Function(KtList<Assignment> assignment)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -253,6 +389,7 @@ mixin _$GetAssignmentState {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Load value) loading,
+    required TResult Function(_Updating value) updating,
     required TResult Function(_Success value) success,
     required TResult Function(_Message value) error,
   }) =>
@@ -261,6 +398,7 @@ mixin _$GetAssignmentState {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Load value)? loading,
+    TResult Function(_Updating value)? updating,
     TResult Function(_Success value)? success,
     TResult Function(_Message value)? error,
     required TResult orElse(),
@@ -325,6 +463,7 @@ class _$_Initial implements _Initial {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function() updating,
     required TResult Function(KtList<Assignment> assignment) success,
     required TResult Function(String message) error,
   }) {
@@ -336,6 +475,7 @@ class _$_Initial implements _Initial {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function()? updating,
     TResult Function(KtList<Assignment> assignment)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -351,6 +491,7 @@ class _$_Initial implements _Initial {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Load value) loading,
+    required TResult Function(_Updating value) updating,
     required TResult Function(_Success value) success,
     required TResult Function(_Message value) error,
   }) {
@@ -362,6 +503,7 @@ class _$_Initial implements _Initial {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Load value)? loading,
+    TResult Function(_Updating value)? updating,
     TResult Function(_Success value)? success,
     TResult Function(_Message value)? error,
     required TResult orElse(),
@@ -416,6 +558,7 @@ class _$_Load implements _Load {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function() updating,
     required TResult Function(KtList<Assignment> assignment) success,
     required TResult Function(String message) error,
   }) {
@@ -427,6 +570,7 @@ class _$_Load implements _Load {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function()? updating,
     TResult Function(KtList<Assignment> assignment)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -442,6 +586,7 @@ class _$_Load implements _Load {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Load value) loading,
+    required TResult Function(_Updating value) updating,
     required TResult Function(_Success value) success,
     required TResult Function(_Message value) error,
   }) {
@@ -453,6 +598,7 @@ class _$_Load implements _Load {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Load value)? loading,
+    TResult Function(_Updating value)? updating,
     TResult Function(_Success value)? success,
     TResult Function(_Message value)? error,
     required TResult orElse(),
@@ -466,6 +612,102 @@ class _$_Load implements _Load {
 
 abstract class _Load implements GetAssignmentState {
   const factory _Load() = _$_Load;
+}
+
+/// @nodoc
+abstract class _$UpdatingCopyWith<$Res> {
+  factory _$UpdatingCopyWith(_Updating value, $Res Function(_Updating) then) =
+      __$UpdatingCopyWithImpl<$Res>;
+}
+
+/// @nodoc
+class __$UpdatingCopyWithImpl<$Res>
+    extends _$GetAssignmentStateCopyWithImpl<$Res>
+    implements _$UpdatingCopyWith<$Res> {
+  __$UpdatingCopyWithImpl(_Updating _value, $Res Function(_Updating) _then)
+      : super(_value, (v) => _then(v as _Updating));
+
+  @override
+  _Updating get _value => super._value as _Updating;
+}
+
+/// @nodoc
+
+class _$_Updating implements _Updating {
+  const _$_Updating();
+
+  @override
+  String toString() {
+    return 'GetAssignmentState.updating()';
+  }
+
+  @override
+  bool operator ==(dynamic other) {
+    return identical(this, other) || (other is _Updating);
+  }
+
+  @override
+  int get hashCode => runtimeType.hashCode;
+
+  @override
+  @optionalTypeArgs
+  TResult when<TResult extends Object?>({
+    required TResult Function() initial,
+    required TResult Function() loading,
+    required TResult Function() updating,
+    required TResult Function(KtList<Assignment> assignment) success,
+    required TResult Function(String message) error,
+  }) {
+    return updating();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeWhen<TResult extends Object?>({
+    TResult Function()? initial,
+    TResult Function()? loading,
+    TResult Function()? updating,
+    TResult Function(KtList<Assignment> assignment)? success,
+    TResult Function(String message)? error,
+    required TResult orElse(),
+  }) {
+    if (updating != null) {
+      return updating();
+    }
+    return orElse();
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult map<TResult extends Object?>({
+    required TResult Function(_Initial value) initial,
+    required TResult Function(_Load value) loading,
+    required TResult Function(_Updating value) updating,
+    required TResult Function(_Success value) success,
+    required TResult Function(_Message value) error,
+  }) {
+    return updating(this);
+  }
+
+  @override
+  @optionalTypeArgs
+  TResult maybeMap<TResult extends Object?>({
+    TResult Function(_Initial value)? initial,
+    TResult Function(_Load value)? loading,
+    TResult Function(_Updating value)? updating,
+    TResult Function(_Success value)? success,
+    TResult Function(_Message value)? error,
+    required TResult orElse(),
+  }) {
+    if (updating != null) {
+      return updating(this);
+    }
+    return orElse();
+  }
+}
+
+abstract class _Updating implements GetAssignmentState {
+  const factory _Updating() = _$_Updating;
 }
 
 /// @nodoc
@@ -534,6 +776,7 @@ class _$_Success implements _Success {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function() updating,
     required TResult Function(KtList<Assignment> assignment) success,
     required TResult Function(String message) error,
   }) {
@@ -545,6 +788,7 @@ class _$_Success implements _Success {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function()? updating,
     TResult Function(KtList<Assignment> assignment)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -560,6 +804,7 @@ class _$_Success implements _Success {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Load value) loading,
+    required TResult Function(_Updating value) updating,
     required TResult Function(_Success value) success,
     required TResult Function(_Message value) error,
   }) {
@@ -571,6 +816,7 @@ class _$_Success implements _Success {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Load value)? loading,
+    TResult Function(_Updating value)? updating,
     TResult Function(_Success value)? success,
     TResult Function(_Message value)? error,
     required TResult orElse(),
@@ -656,6 +902,7 @@ class _$_Message implements _Message {
   TResult when<TResult extends Object?>({
     required TResult Function() initial,
     required TResult Function() loading,
+    required TResult Function() updating,
     required TResult Function(KtList<Assignment> assignment) success,
     required TResult Function(String message) error,
   }) {
@@ -667,6 +914,7 @@ class _$_Message implements _Message {
   TResult maybeWhen<TResult extends Object?>({
     TResult Function()? initial,
     TResult Function()? loading,
+    TResult Function()? updating,
     TResult Function(KtList<Assignment> assignment)? success,
     TResult Function(String message)? error,
     required TResult orElse(),
@@ -682,6 +930,7 @@ class _$_Message implements _Message {
   TResult map<TResult extends Object?>({
     required TResult Function(_Initial value) initial,
     required TResult Function(_Load value) loading,
+    required TResult Function(_Updating value) updating,
     required TResult Function(_Success value) success,
     required TResult Function(_Message value) error,
   }) {
@@ -693,6 +942,7 @@ class _$_Message implements _Message {
   TResult maybeMap<TResult extends Object?>({
     TResult Function(_Initial value)? initial,
     TResult Function(_Load value)? loading,
+    TResult Function(_Updating value)? updating,
     TResult Function(_Success value)? success,
     TResult Function(_Message value)? error,
     required TResult orElse(),

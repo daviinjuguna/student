@@ -1,10 +1,15 @@
+import 'dart:async';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kt_dart/kt.dart';
 import 'package:student/core/util/constant.dart';
 import 'package:student/di/injection.dart';
+import 'package:student/features/domain/entities/assignment.dart';
 import 'package:student/features/domain/entities/course.dart';
+import 'package:student/features/domain/entities/pdf.dart';
 import 'package:student/features/presentation/bloc/clear_prefs/clear_prefs_bloc.dart';
 import 'package:student/features/presentation/bloc/get_assignment/get_assignment_bloc.dart';
 import 'package:student/features/presentation/bloc/get_pdf/get_pdf_bloc.dart';
@@ -23,8 +28,12 @@ class StudentCoursePage extends StatefulWidget {
 }
 
 class _StudentCoursePageState extends State<StudentCoursePage> {
-  final _pdfBloc = getIt<GetPdfBloc>();
-  final _assignmentBloc = getIt<GetAssignmentBloc>();
+  late final _pdfBloc = getIt<GetPdfBloc>();
+  late final _assignmentBloc = getIt<GetAssignmentBloc>();
+  late int _finalScore = 0;
+  KtList<Assignment> _assignment = emptyList();
+  KtList<Pdf> _pdf = emptyList();
+  Completer<void> _refreshCompleter = Completer<void>();
 
   @override
   void initState() {
@@ -57,7 +66,14 @@ class _StudentCoursePageState extends State<StudentCoursePage> {
             listener: (context, state) {
               state.maybeMap(
                 orElse: () {},
+                success: (state) {
+                  _refreshCompleter.complete();
+                  _refreshCompleter = Completer();
+                  _pdf = state.pdf;
+                },
                 error: (state) {
+                  _refreshCompleter.complete();
+                  _refreshCompleter = Completer();
                   ScaffoldMessenger.maybeOf(context)!..hideCurrentSnackBar();
                   if (state.message == UNAUTHENTICATED_FAILURE_MESSAGE) {
                     //you will be thrown out asf
@@ -108,7 +124,22 @@ class _StudentCoursePageState extends State<StudentCoursePage> {
             listener: (context, state) {
               state.maybeMap(
                 orElse: () {},
+                success: (state) {
+                  _refreshCompleter.complete();
+                  _refreshCompleter = Completer();
+                  int _total = 0;
+                  _assignment = state.assignment;
+                  _assignment.asList().forEach((element) {
+                    if (element.attempted != null) {
+                      _total += element.attempted!.grade;
+                    }
+                  });
+
+                  _finalScore = (_total / state.assignment.size).truncate();
+                },
                 error: (state) {
+                  _refreshCompleter.complete();
+                  _refreshCompleter = Completer();
                   ScaffoldMessenger.maybeOf(context)!..hideCurrentSnackBar();
                   if (state.message == UNAUTHENTICATED_FAILURE_MESSAGE) {
                     //you will be thrown out asf
@@ -168,242 +199,272 @@ class _StudentCoursePageState extends State<StudentCoursePage> {
               style: TextStyle(color: Colors.white),
             ),
           ),
-          body: SingleChildScrollView(
-            // physics: NeverScrollableScrollPhysics(),
-            child: Container(
-              height: (height < 780) ? 780 : height, //being leposiv
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      width: double.infinity,
-                      alignment: Alignment.center,
-                      child: Card(
-                        child: Column(
-                          children: [
-                            Text(
-                              "LEARNING MATERIALS",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
+          body: RefreshIndicator(
+            onRefresh: () {
+              _pdfBloc.add(GetPdfEvent.update(id: widget._course.id));
+              _assignmentBloc
+                  .add(GetAssignmentEvent.update(id: widget._course.id));
+              return _refreshCompleter.future;
+            },
+            child: SingleChildScrollView(
+              // physics: NeverScrollableScrollPhysics(),
+              child: Container(
+                height: (height < 780) ? 780 : height, //being leposiv
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        child: Card(
+                          child: Column(
+                            children: [
+                              Text(
+                                "LEARNING MATERIALS",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: BlocBuilder<GetPdfBloc, GetPdfState>(
-                                builder: (context, state) {
-                                  return state.map(
-                                    initial: (_) => Container(),
-                                    loading: (_) => Center(
-                                      child: CupertinoActivityIndicator(),
-                                    ),
-                                    success: (state) {
-                                      final pdf = state.pdf;
-                                      return ListView.separated(
-                                        //TODO fix scrolls
-                                        // shrinkWrap: true,
-                                        // physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) =>
-                                            Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 15,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("${pdf[index].name}"),
-                                              IconButton(
-                                                padding: EdgeInsets.zero,
-                                                color: kYellowColor,
-                                                icon:
-                                                    Icon(Icons.picture_as_pdf),
-                                                onPressed: () =>
-                                                    context.router.push(
-                                                  PdfViewRoute(pdf: pdf[index]),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        separatorBuilder: (context, index) =>
-                                            Divider(),
-                                        itemCount: pdf.size,
-                                      );
-                                    },
-                                    error: (state) => Container(
-                                      height: double.infinity,
-                                      width: double.infinity,
-                                      alignment: Alignment.center,
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            "Oh Snap",
-                                            style: TextStyle(
-                                              fontSize: 30,
-                                              fontWeight: FontWeight.w800,
+                              Expanded(
+                                child: BlocBuilder<GetPdfBloc, GetPdfState>(
+                                  builder: (context, state) {
+                                    return state.maybeMap(
+                                      orElse: () {
+                                        final pdf = _pdf;
+                                        return ListView.separated(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) =>
+                                              Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 15,
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            "Something went wrong, Please try agait",
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w600,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            height: 5,
-                                          ),
-                                          MaterialButton(
-                                            onPressed: () => _pdfBloc.add(
-                                                GetPdfEvent.started(
-                                                    id: widget._course.id)),
-                                            color: kYellowColor,
-                                            textColor: Colors.white,
-                                            child: Text("RETRY"),
-                                          ),
-                                          SizedBox(
-                                            height: 50,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      width: double.infinity,
-                      // padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
-                      // height: 300,
-                      alignment: Alignment.center,
-                      child: Card(
-                        child: Column(
-                          children: [
-                            Text(
-                              "ASSIGNMENTS",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
-                              ),
-                            ),
-                            Expanded(
-                              child: BlocBuilder<GetAssignmentBloc,
-                                  GetAssignmentState>(
-                                builder: (context, state) {
-                                  return state.map(
-                                    initial: (_) => Container(),
-                                    loading: (_) => Center(
-                                      child: CupertinoActivityIndicator(),
-                                    ),
-                                    success: (state) {
-                                      final ass = state.assignment;
-                                      return ListView.separated(
-                                        //TODO fix scrolls
-                                        // shrinkWrap: true,
-                                        // physics: NeverScrollableScrollPhysics(),
-                                        itemBuilder: (context, index) =>
-                                            Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 15,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(5),
-                                          ),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text("${ass[index].title}"),
-                                              MaterialButton(
-                                                elevation: 0,
-                                                color: kYellowColor,
-                                                child: Container(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    "VIEW",
-                                                    style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w800,
-                                                      letterSpacing: 1.4,
-                                                    ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("${pdf[index].name}"),
+                                                IconButton(
+                                                  padding: EdgeInsets.zero,
+                                                  color: kYellowColor,
+                                                  icon: Icon(
+                                                      Icons.picture_as_pdf),
+                                                  onPressed: () =>
+                                                      context.router.push(
+                                                    PdfViewRoute(
+                                                        pdf: pdf[index]),
                                                   ),
                                                 ),
-                                                onPressed: () => context.router
-                                                    .push(
-                                                        StudentAssignmentRoute(
-                                                            assignment:
-                                                                ass[index])),
-                                              ),
-                                            ],
+                                              ],
+                                            ),
                                           ),
+                                          separatorBuilder: (context, index) =>
+                                              Divider(),
+                                          itemCount: pdf.size,
+                                        );
+                                      },
+                                      initial: (_) => Container(),
+                                      loading: (_) => Center(
+                                        child: CupertinoActivityIndicator(),
+                                      ),
+                                      error: (state) => Container(
+                                        height: double.infinity,
+                                        width: double.infinity,
+                                        alignment: Alignment.center,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Oh Snap",
+                                              style: TextStyle(
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.w800,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              "Something went wrong, Please try agait",
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              height: 5,
+                                            ),
+                                            MaterialButton(
+                                              onPressed: () => _pdfBloc.add(
+                                                  GetPdfEvent.started(
+                                                      id: widget._course.id)),
+                                              color: kYellowColor,
+                                              textColor: Colors.white,
+                                              child: Text("RETRY"),
+                                            ),
+                                            SizedBox(
+                                              height: 50,
+                                            ),
+                                          ],
                                         ),
-                                        separatorBuilder: (context, index) =>
-                                            Divider(),
-                                        itemCount: ass.size,
-                                      );
-                                    },
-                                    error: (state) => ErrorCard(
-                                      retry: () => _assignmentBloc.add(
-                                          GetAssignmentEvent.started(
-                                              id: widget._course.id)),
-                                    ),
-                                  );
-                                },
-                              ),
-                            )
-                          ],
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(10),
-                          bottomRight: Radius.circular(10),
-                        ),
-                      ),
-                      width: double.infinity,
-                      child: Card(
-                        child: Column(
-                          children: [
-                            Text(
-                              "SCORE",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 18,
+                    Expanded(
+                      flex: 3,
+                      child: Container(
+                        width: double.infinity,
+                        // padding: EdgeInsets.only(left: 8, right: 8, bottom: 8),
+                        // height: 300,
+                        alignment: Alignment.center,
+                        child: Card(
+                          child: Column(
+                            children: [
+                              Text(
+                                "ASSIGNMENTS",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                ),
                               ),
-                            ),
-                          ],
+                              Expanded(
+                                child: BlocBuilder<GetAssignmentBloc,
+                                    GetAssignmentState>(
+                                  builder: (context, state) {
+                                    return state.maybeMap(
+                                      orElse: () {
+                                        final ass = _assignment;
+                                        print("FINAL SCORE: $_finalScore");
+
+                                        return ListView.separated(
+                                          shrinkWrap: true,
+                                          physics:
+                                              NeverScrollableScrollPhysics(),
+                                          itemBuilder: (context, index) =>
+                                              Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 15,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text("${ass[index].title}"),
+                                                MaterialButton(
+                                                  elevation: 0,
+                                                  color: kYellowColor,
+                                                  child: Container(
+                                                    alignment: Alignment.center,
+                                                    child: Text(
+                                                      "VIEW",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        letterSpacing: 1.4,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  onPressed: () =>
+                                                      context.router.push(
+                                                          StudentAssignmentRoute(
+                                                              assignment:
+                                                                  ass[index])),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          separatorBuilder: (context, index) =>
+                                              Divider(),
+                                          itemCount: ass.size,
+                                        );
+                                      },
+                                      initial: (_) => Container(),
+                                      loading: (_) => Center(
+                                        child: CupertinoActivityIndicator(),
+                                      ),
+                                      // success: (state) {
+                                      //   final ass = state.assignment;
+
+                                      //   print("FINAL SCORE: $_finalScore");
+                                      // },
+                                      error: (state) => ErrorCard(
+                                        retry: () => _assignmentBloc.add(
+                                            GetAssignmentEvent.started(
+                                                id: widget._course.id)),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    Expanded(
+                      child: Container(
+                        clipBehavior: Clip.antiAliasWithSaveLayer,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                          ),
+                        ),
+                        width: double.infinity,
+                        child: Card(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "SCORE:",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18,
+                                ),
+                              ),
+                              BlocBuilder<GetAssignmentBloc,
+                                  GetAssignmentState>(
+                                builder: (context, state) => Text(
+                                  _finalScore.toString() + "%",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 18,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
