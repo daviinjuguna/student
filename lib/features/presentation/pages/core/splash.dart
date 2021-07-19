@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:student/core/util/constant.dart';
-import 'package:student/features/presentation/bloc/battery/battery_bloc.dart';
 import 'package:student/features/presentation/bloc/network/ntwork_bloc.dart';
 import 'package:student/features/presentation/bloc/splash_bloc/splash_bloc.dart';
 import 'package:student/core/routes/app_router.gr.dart';
@@ -26,7 +25,7 @@ class _SplashPageState extends State<SplashPage> {
 
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       context.read<NtworkBloc>().add(NtworkEvent.startet());
-      context.read<BatteryBloc>().add(BatteryEvent.started());
+      // context.read<BatteryBloc>().add(BatteryEvent.started());
       context.read<SplashBloc>().add(SplashEvent.refresh());
     });
   }

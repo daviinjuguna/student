@@ -35,7 +35,7 @@ abstract class Repository {
   Future<Either<String, bool>> checkAuth();
 
   //battery checker
-  Stream<Either<String, String>> checkBattery();
+  // Stream<Either<String, String>> checkBattery();
 
   //Fetch Course
   Future<Either<String, KtList<Course>>> getCourses();

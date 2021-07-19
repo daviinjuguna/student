@@ -36,14 +36,11 @@ class ChoiceCard extends StatelessWidget {
               ),
             ),
             AnimatedContainer(
-              duration: Duration(milliseconds: 100),
+              duration: Duration(milliseconds: 150),
               height: 26,
               width: 26,
               decoration: BoxDecoration(
                 color: selected || currentSelected ? kYellowColor : null,
-                // color: getTheRightColor() == kGrayColor
-                //     ? Colors.transparent
-                //     : getTheRightColor(),
                 borderRadius: BorderRadius.circular(50),
                 border: Border.all(
                   color: correct

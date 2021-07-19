@@ -7,6 +7,7 @@ import 'package:student/core/util/constant.dart';
 import 'package:student/di/injection.dart';
 import 'package:student/features/domain/entities/assignment.dart';
 import 'package:student/features/domain/entities/question.dart';
+import 'package:student/features/presentation/bloc/attempt/attempt_bloc.dart';
 import 'package:student/features/presentation/bloc/clear_prefs/clear_prefs_bloc.dart';
 import 'package:student/features/presentation/bloc/get_question/get_question_bloc.dart';
 import 'package:student/features/presentation/components/error_card.dart';
@@ -27,6 +28,8 @@ class StudentAssignmentPage extends StatefulWidget {
 
 class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
   final _getQuestionBloc = getIt<GetQuestionBloc>();
+  late final _attemptBloc = getIt<AttemptBloc>();
+
   int _initialPage = 0;
   KtList<Question> _question = emptyList();
 
@@ -40,6 +43,7 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
   void dispose() {
     super.dispose();
     _getQuestionBloc.close();
+    _attemptBloc.close();
   }
 
   @override
@@ -47,9 +51,74 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => _getQuestionBloc),
+        BlocProvider(create: (create) => _attemptBloc)
       ],
       child: MultiBlocListener(
         listeners: [
+          BlocListener<AttemptBloc, AttemptState>(
+            listener: (c, state) {
+              state.maybeMap(
+                orElse: () {},
+                loading: (state) {
+                  ScaffoldMessenger.maybeOf(context)!
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        backgroundColor: kBlackColor,
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        content: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            CircularProgressIndicator.adaptive(
+                              valueColor: AlwaysStoppedAnimation(kYellowColor),
+                            ),
+                            Text(
+                              "Submitting assignment...",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                },
+                error: (state) {
+                  print("Error");
+                },
+                success: (s) {
+                  ScaffoldMessenger.maybeOf(context)
+                    ?..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      SnackBar(
+                        backgroundColor: Colors.green,
+                        behavior: SnackBarBehavior.fixed,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(5),
+                          topRight: Radius.circular(5),
+                        )),
+                        content: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              "SUCEES",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            // SizedBox(height: 3),
+                            Text("Submitted Successfully")
+                          ],
+                        ),
+                      ),
+                    );
+                  _getQuestionBloc
+                      .add(GetQuestionEvent.update(id: widget._assignment.id));
+                },
+              );
+            },
+          ),
           BlocListener<GetQuestionBloc, GetQuestionState>(
             listener: (context, state) {
               state.maybeMap(
@@ -166,7 +235,17 @@ class _StudentAssignmentPageState extends State<StudentAssignmentPage> {
                               ),
                             ),
                           ),
-                          Expanded(child: Container()),
+                          MaterialButton(
+                            onPressed: () {
+                              _attemptBloc.add(AttemptEvent.startAssignment(
+                                  assignmentId: widget._assignment.id));
+                            },
+                            color: kBlackColor,
+                            child: Text(
+                              "FINISH",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
                         ],
                       ),
                     );

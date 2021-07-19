@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:student/core/util/constant.dart';
 import 'package:student/di/injection.dart';
-import 'package:student/features/presentation/bloc/battery/battery_bloc.dart';
 import 'package:student/features/presentation/bloc/clear_prefs/clear_prefs_bloc.dart';
 import 'package:student/features/presentation/bloc/network/ntwork_bloc.dart';
 import 'package:student/features/presentation/bloc/splash_bloc/splash_bloc.dart';
@@ -31,7 +30,7 @@ final _appRouter = AppRouter(_navigatorKey);
 class _EshuleState extends State<Eshule> {
   final _ntworkBloc = getIt<NtworkBloc>();
   final _splashBloc = getIt<SplashBloc>();
-  final _batteryBloc = getIt<BatteryBloc>();
+  // final _batteryBloc = getIt<BatteryBloc>();
   final _prefsBloc = getIt<ClearPrefsBloc>();
 
   @override
@@ -45,7 +44,7 @@ class _EshuleState extends State<Eshule> {
     _prefsBloc.close();
     _ntworkBloc.close();
     _splashBloc.close();
-    _batteryBloc.close();
+    // _batteryBloc.close();
   }
 
   @override
@@ -54,27 +53,27 @@ class _EshuleState extends State<Eshule> {
       providers: [
         BlocProvider(create: (context) => _ntworkBloc),
         BlocProvider(create: (context) => _splashBloc),
-        BlocProvider(create: (context) => _batteryBloc),
+        // BlocProvider(create: (context) => _batteryBloc),
         BlocProvider(create: (context) => _prefsBloc),
       ],
       child: MultiBlocListener(
         listeners: [
-          BlocListener<BatteryBloc, BatteryState>(
-            listener: (context, state) {
-              state.maybeMap(
-                orElse: () {},
-                loadSuccess: (value) {
-                  if (value.batteryStatus == DISCHARGING) {
-                    print("Dishcharge");
-                  } else if (value.batteryStatus == CHARGING) {
-                    print("Charging");
-                  } else if (value.batteryStatus == CHARGED) {
-                    print("Fully Charged");
-                  }
-                },
-              );
-            },
-          ),
+          // BlocListener<BatteryBloc, BatteryState>(
+          //   listener: (context, state) {
+          //     state.maybeMap(
+          //       orElse: () {},
+          //       loadSuccess: (value) {
+          //         if (value.batteryStatus == DISCHARGING) {
+          //           print("Dishcharge");
+          //         } else if (value.batteryStatus == CHARGING) {
+          //           print("Charging");
+          //         } else if (value.batteryStatus == CHARGED) {
+          //           print("Fully Charged");
+          //         }
+          //       },
+          //     );
+          //   },
+          // ),
           BlocListener<NtworkBloc, NtworkState>(
             listener: (context, state) {
               state.maybeMap(
@@ -141,18 +140,4 @@ Widget buildMaterialApp(BuildContext context) => MaterialApp.router(
           ),
         ),
       ),
-      darkTheme: ThemeData(
-          scaffoldBackgroundColor: kBlackColor,
-          primaryColor: kYellowColor,
-          primarySwatch: kPrimarySwatch,
-          brightness: Brightness.dark,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          textTheme: GoogleFonts.montserratTextTheme(),
-          appBarTheme: AppBarTheme(
-            color: Colors.black,
-            titleTextStyle: TextStyle(color: Colors.white),
-            iconTheme: IconThemeData(
-              color: Colors.white,
-            ),
-          )),
     );

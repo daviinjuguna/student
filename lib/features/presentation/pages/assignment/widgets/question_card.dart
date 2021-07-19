@@ -24,22 +24,18 @@ class QuestionCard extends StatefulWidget {
 
 class _QuestionCardState extends State<QuestionCard> {
   late final _attemptBloc = getIt<AttemptBloc>();
-  late final _getChoiceBloc = getIt<GetChoiceBloc>();
-  KtList<Choice> _choice = emptyList();
 
   int? _currentSelected;
   @override
   void initState() {
     super.initState();
     // _getChoiceBloc.add(GetChoiceEvent.started(id: widget._question.id));
-    _choice = widget._question.choices;
   }
 
   @override
   void dispose() {
     super.dispose();
     _attemptBloc.close();
-    _getChoiceBloc.close();
   }
 
   @override
@@ -47,7 +43,6 @@ class _QuestionCardState extends State<QuestionCard> {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (create) => _attemptBloc),
-        BlocProvider(create: (create) => _getChoiceBloc),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -63,16 +58,6 @@ class _QuestionCardState extends State<QuestionCard> {
               );
             },
           ),
-          BlocListener<GetChoiceBloc, GetChoiceState>(
-            listener: (c, state) {
-              state.maybeMap(
-                orElse: () {},
-                success: (state) {
-                  _choice = state.course;
-                },
-              );
-            },
-          )
         ],
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 10),
@@ -94,36 +79,31 @@ class _QuestionCardState extends State<QuestionCard> {
                 ),
               ),
               Expanded(
-                child: BlocBuilder<GetChoiceBloc, GetChoiceState>(
-                  builder: (context, state) {
-                    return ListView.builder(
-                      padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
-                      physics: AlwaysScrollableScrollPhysics(),
-                      itemCount: widget._question.choices.size,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => ChoiceCard(
-                        press: () {
-                          if (widget._question.selectedAnswerId != null) {
-                            print("HELLOW RUDDY");
-                            return;
-                          }
-                          setState(() {
-                            _currentSelected =
-                                widget._question.choices[index].id;
-                          });
-                        },
-                        name: widget._question.choices[index].title,
-                        correct: widget._question.selectedAnswerId != null &&
-                            widget._question.answerId ==
-                                widget._question.choices[index].id,
-                        selected: widget._question.selectedAnswerId != null &&
-                            widget._question.selectedAnswerId ==
-                                widget._question.choices[index].id,
-                        currentSelected: _currentSelected ==
+                child: ListView.builder(
+                  padding: EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                  physics: AlwaysScrollableScrollPhysics(),
+                  itemCount: widget._question.choices.size,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => ChoiceCard(
+                    press: () {
+                      if (widget._question.selectedAnswerId != null) {
+                        print("HELLOW RUDDY");
+                        return;
+                      }
+                      setState(() {
+                        _currentSelected = widget._question.choices[index].id;
+                      });
+                    },
+                    name: widget._question.choices[index].title,
+                    correct: widget._question.selectedAnswerId != null &&
+                        widget._question.answerId ==
                             widget._question.choices[index].id,
-                      ),
-                    );
-                  },
+                    selected: widget._question.selectedAnswerId != null &&
+                        widget._question.selectedAnswerId ==
+                            widget._question.choices[index].id,
+                    currentSelected:
+                        _currentSelected == widget._question.choices[index].id,
+                  ),
                 ),
               ),
               Padding(

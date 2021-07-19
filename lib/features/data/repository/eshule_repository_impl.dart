@@ -1,4 +1,3 @@
-import 'package:battery/battery.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dartz/dartz.dart';
 import 'package:injectable/injectable.dart';
@@ -34,13 +33,12 @@ class RepositoryImpl implements Repository {
   final RemoteDataSource _remote;
   final Connectivity _connectivity;
 
-  final Battery _battery;
+  // final Battery _battery;
 
   RepositoryImpl(
     this._local,
     this._remote,
     this._connectivity,
-    this._battery,
   );
 
   //!Connection CHecker
@@ -58,23 +56,23 @@ class RepositoryImpl implements Repository {
     });
   }
 
-  //!battery checker
-  @override
-  Stream<Either<String, String>> checkBattery() async* {
-    yield* _battery.onBatteryStateChanged.map((e) {
-      if (e == BatteryState.full) {
-        return right<String, String>(CHARGED);
-      } else if (e == BatteryState.charging) {
-        return right<String, String>(CHARGING);
-      } else {
-        return right<String, String>(DISCHARGING);
-      }
-    }).onErrorReturnWith((e, s) {
-      print('$e, $s');
-      final failure = returnFailure(e);
-      return left(failure);
-    });
-  }
+  // //!battery checker
+  // @override
+  // Stream<Either<String, String>> checkBattery() async* {
+  //   yield* _battery.onBatteryStateChanged.map((e) {
+  //     if (e == BatteryState.full) {
+  //       return right<String, String>(CHARGED);
+  //     } else if (e == BatteryState.charging) {
+  //       return right<String, String>(CHARGING);
+  //     } else {
+  //       return right<String, String>(DISCHARGING);
+  //     }
+  //   }).onErrorReturnWith((e, s) {
+  //     print('$e, $s');
+  //     final failure = returnFailure(e);
+  //     return left(failure);
+  //   });
+  // }
 
   //!checkAuth
   @override

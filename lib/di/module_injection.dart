@@ -1,4 +1,3 @@
-import 'package:battery/battery.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:injectable/injectable.dart';
@@ -18,6 +17,6 @@ abstract class InjectionModules {
   //*picking files
 
   //*checking battery charging,discharging,low
-  @lazySingleton
-  Battery get battery => Battery();
+  // @lazySingleton
+  // Battery get battery => Battery();
 }
